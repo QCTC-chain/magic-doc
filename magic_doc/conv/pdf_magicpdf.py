@@ -26,6 +26,7 @@ class SingletonModelWrapper:
             apply_ocr = os.getenv("APPLY_OCR", "TRUE") == "TRUE" 
             apply_layout = os.getenv("APPLY_LAYOUT", "TRUE") == "TRUE" 
             apply_formula = os.getenv("APPLY_FORMULA", "FALSE") == "TRUE"
+            apply_table = os.getenv("APPLY_TABLE", "FALSE") == "TRUE"
             
             cls.instance = super(SingletonModelWrapper, cls).__new__(cls)
             cls.instance.doc_analysis = DocAnalysis(  # type: ignore
@@ -33,12 +34,18 @@ class SingletonModelWrapper:
                 configs=os.path.join(
                     get_repo_directory(), "resources/model/model_configs.yaml"
                 ),
-                apply_ocr=apply_ocr, apply_layout=apply_layout, apply_formula=apply_formula,
+                apply_ocr=apply_ocr, 
+                apply_layout=apply_layout, 
+                apply_formula=apply_formula,
+                table_config={
+                    'is_table_recog_enable': apply_table,
+                    'max_time': 400,
+                }
             )
         return cls.instance
     
     def __call__(self, bits: bytes):
-        from magic_doc.model.doc_analysis import load_images_from_pdf
+        from magic_pdf.model.doc_analyze_by_custom_model import load_images_from_pdf
         images = load_images_from_pdf(bits, dpi=200)
         return self.doc_analysis(images) # type: ignore
 

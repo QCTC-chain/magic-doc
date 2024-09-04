@@ -1,7 +1,7 @@
 models:
   layout: True
   formula: False
-  ocr: False
+  ocr: True 
   table_config:
     is_table_recog_enable: False
     max_time: 400

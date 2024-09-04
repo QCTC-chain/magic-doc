@@ -20,7 +20,7 @@ NULL_IMG_DIR = "/tmp"
 
 class SingletonModelWrapper:
 
-    def __new__(cls):
+    def __new__(cls, models_dir):
         if not hasattr(cls, "instance"):
             from magic_doc.model.doc_analysis import DocAnalysis
             apply_ocr = os.getenv("APPLY_OCR", "TRUE") == "TRUE" 
@@ -29,6 +29,7 @@ class SingletonModelWrapper:
             
             cls.instance = super(SingletonModelWrapper, cls).__new__(cls)
             cls.instance.doc_analysis = DocAnalysis(  # type: ignore
+                models_dir=models_dir,
                 configs=os.path.join(
                     get_repo_directory(), "resources/model/model_configs.yaml"
                 ),
@@ -43,6 +44,10 @@ class SingletonModelWrapper:
 
 class Pdf(BaseConv):
 
+    def __init__(self, models_dir):
+        super().__init__()
+        self.models_dir = models_dir
+
     def __construct_pdf_pipe(self, bits, model_list, image_writer):
         if DEFAULT_CONFIG["pdf"]["hq"]["parsemethod"] == PdfHqParseMethod.AUTO:
             pipe = UNIPipe(bits, model_list, image_writer, is_debug=True)  # type: ignore
@@ -56,7 +61,7 @@ class Pdf(BaseConv):
 
 
     def to_md(self, bits: bytes | str, pupdator: ConvProgressUpdator) -> str:
-        model_proc = SingletonModelWrapper()
+        model_proc = SingletonModelWrapper(self.models_dir)
         pupdator.update(0)
 
         model_list = model_proc(bits)  # type: ignore
@@ -98,7 +103,7 @@ class Pdf(BaseConv):
 if __name__ == "__main__":
     with open("/opt/data/pdf/20240423/pdf_test2/ol006018w.pdf", "rb") as f:
         bits_data = f.read()
-        parser = Pdf()
+        parser = Pdf(models_dir='/Users/dbliu/work/machine-learn/PDF-Extract-Kit/models')
         md_content = parser.to_md(
             bits_data, FileBaseProgressUpdator("debug/progress.txt")
         )

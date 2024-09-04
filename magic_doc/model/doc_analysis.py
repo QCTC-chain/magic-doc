@@ -60,7 +60,10 @@ class DocAnalysis(object):
     """
 
     def __init__(
-        self, configs="magic_doc/resources/model/model_configs.yaml", **kwargs
+        self, 
+        models_dir = '/tmp/models',
+        configs="magic_doc/resources/model/model_configs.yaml", 
+        **kwargs
     ):
         """
         Description:
@@ -89,22 +92,22 @@ class DocAnalysis(object):
         assert self.apply_layout, "DocAnalysis must contain layout model."
 
         if torch.cuda.device_count() > 1:
-            self.layout_model = ParallelLayout(self.configs["weights"]["layout"])
+            self.layout_model = ParallelLayout(os.path.join(models_dir, self.configs["weights"]["layout"]))
         else:
-            self.layout_model = SeqLayout(self.configs["weights"]["layout"])
+            self.layout_model = SeqLayout(os.path.join(models_dir,self.configs["weights"]["layout"]), self.device)
 
         if self.apply_formula:
-            self.mfd_model = YOLO(self.configs["weights"]["mfd"])
+            self.mfd_model = YOLO(os.path.join(models_dir,self.configs["weights"]["mfd"]))
             args = argparse.Namespace(
                 cfg_path=os.path.join(get_repo_directory(), "resources/model/UniMERNet/demo_old.yaml"),
                 options=None,
             )
             cfg = Config(args)
             cfg.config.model.pretrained = os.path.join(
-                self.configs["weights"]["mfr"], "pytorch_model.bin"
+                models_dir, self.configs["weights"]["mfr"], "pytorch_model.bin"
             )
-            cfg.config.model.model_config.model_name = self.configs["weights"]["mfr"]
-            cfg.config.model.tokenizer_config.path = self.configs["weights"]["mfr"]
+            cfg.config.model.model_config.model_name = os.path.join(models_dir, self.configs["weights"]["mfr"])
+            cfg.config.model.tokenizer_config.path = os.path.join(models_dir, self.configs["weights"]["mfr"])
             task = tasks.setup_task(cfg)
             model = task.build_model(cfg)
             self.mfr_model = model.to(self.device)

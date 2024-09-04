@@ -2,10 +2,14 @@ models:
   layout: True
   formula: False
   ocr: False
+  table_config:
+    is_table_recog_enable: False
+    max_time: 400
 
 weights:
-  layout: /mnt/hwfile/opendatalab/wufan/weights/ocr_pipeline/Layoutlmv3/model_final.pth
-  mfd: /mnt/hwfile/opendatalab/wufan/weights/ocr_pipeline/yolov8/withouscihubtrain_addr4_epoch91.pt
-  mfr: /mnt/hwfile/opendatalab/wufan/weights/ocr_pipeline/UniMERNet/models_old
+  layout: Layout/model_final.pth
+  mfd: MFD/weights.pt
+  mfr: MFR/UniMERNet
+  table: TabRec/StructEqTable
 
 

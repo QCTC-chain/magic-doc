@@ -53,6 +53,7 @@ class DocConverter(object):
         self,
         s3_config: S3Config,
         temp_dir: str = "/tmp/",
+        models_dir: str = '/tmp/models/',
         parse_pdf_type=ParsePDFType.FAST,
         conv_timeout=60,
     ):
@@ -70,6 +71,7 @@ class DocConverter(object):
         self.parse_pdf_type = parse_pdf_type
         self.__temp_dir = temp_dir
         self.__conv_timeout = conv_timeout
+        self.models_dir = models_dir
         self.__init_conv()
 
     def __init_conv(self):
@@ -80,7 +82,7 @@ class DocConverter(object):
         else:
             self.doc_conv = Doc_libreoffice()
         self.docx_conv = Docx()
-        self.full_pdf_conv = fullPdf()
+        self.full_pdf_conv = fullPdf(self.models_dir)
 
         if DEFAULT_CONFIG["pdf"]["fast"]["parsemethod"] == PdfFastParseMethod.AUTO:
             self.fast_textpdf_conv = fastTextPdf(allowed_failure=False)

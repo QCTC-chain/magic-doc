@@ -50,6 +50,7 @@ class DocConverter(object):
         self,
         s3_config: S3Config,
         temp_dir: str = "/tmp/",
+        models_dir: str = '/tmp/models',
         parse_pdf_type=ParsePDFType.FULL,
         conv_timeout=60,
     ):
@@ -69,6 +70,7 @@ class DocConverter(object):
             )
         self.parse_pdf_type = parse_pdf_type
         self.__temp_dir = temp_dir
+        self.models_dir = models_dir
         self.__conv_timeout = conv_timeout  # 转换超时时间，单位秒
 
         # if not self.__model_equation_recog_path or not self.__model_equation_detect_path or not self.__model_layout_path:
@@ -88,7 +90,7 @@ class DocConverter(object):
         else:
             self.doc_conv = Doc_libreoffice()
         self.docx_conv = Docx()
-        self.full_pdf_conv = fullPdf()
+        self.full_pdf_conv = fullPdf(self.models_dir)
         self.fast_pdf_conv = fastPdf()
         self.ppt_conv = Ppt()
         self.pptx_conv = Pptx()

@@ -32,16 +32,21 @@ total_unsupported_files = 0
 total_time_out = 0
 total_success_convert = 0
 
-
-@click.command()
+@click.group()
 @click.version_option(__version__, "--version", "-v", help="显示版本信息")
+def cli():
+    pass
+
+@cli.command()
+# @click.version_option(__version__, "--version", "-v", help="显示版本信息")
 @click.option('-f', '--file-path', 'input_file_path', type=click.STRING,
               help='file path, support s3/local/list, list file need end with ".list"')
 @click.option('-p', '--progress-file-path', 'progress_file_path', default="/tmp/magic_doc_progress.txt", type=click.STRING,
               help='path to the progress file to save')
 @click.option('-t', '--conv-timeout', 'conv_timeout', default=300, type=click.INT, help='timeout')
 @click.option("-o", "--output", "output", default="", type=click.STRING)
-def cli_conv(input_file_path, progress_file_path, conv_timeout, output):
+@click.option("--models-dir", "models_dir", default="/tmp/models/", type=click.STRING, help="specify the models path")
+def cli_conv(input_file_path, progress_file_path, conv_timeout, output, models_dir):
     global total_cost_time, total_convert_error, total_file_broken, \
         total_unsupported_files, total_time_out, total_success_convert
 
@@ -62,7 +67,7 @@ def cli_conv(input_file_path, progress_file_path, conv_timeout, output):
             else:
                 '''非s3路径不需要初始化s3配置'''
                 s3_config = None
-            doc_conv = DocConverter(s3_config)
+            doc_conv = DocConverter(s3_config, models_dir=models_dir)
             markdown_string, cost_time = doc_conv.convert(doc_path, pf_path, conv_timeout)
             total_cost_time += cost_time
             logger.info(f"convert {doc_path} to markdown, cost {cost_time} seconds")
@@ -109,7 +114,7 @@ def cli_conv(input_file_path, progress_file_path, conv_timeout, output):
 
 
 parse_pdf_methods = click.Choice(["ocr", "digital", "auto"])
-@click.command()
+@cli.command()
 @click.option("-m", "--method", "method", type=parse_pdf_methods,
     help="指定解析方法。digital: 文本型 pdf 解析方法， ocr: 光学识别解析 pdf, auto: 程序智能选择解析方法",
     default="auto")
@@ -117,21 +122,19 @@ parse_pdf_methods = click.Choice(["ocr", "digital", "auto"])
               help='file path, support local or s3')
 @click.option("-o", "--output", "output", default="", type=click.STRING)
 @click.option("-d", "--debug", is_flag=True, default=False)
-def pdf_cli(method, doc_path, output, debug):
+@click.option("--models-dir", "models_dir", default="/tmp/models/", type=click.STRING, help="specify the models path")
+def pdf_cli(method, doc_path, output, debug, models_dir):
 
     os.environ["APPLY_FORMULA"] = "TRUE"
 
-    def prepare_env(pdf_file_name, method):
-        local_parent_dir = output
-        local_image_dir = os.path.join(str(local_parent_dir), "images")
-        local_md_dir = local_parent_dir
-        os.makedirs(local_image_dir, exist_ok=True)
-        os.makedirs(local_md_dir, exist_ok=True)
-        return local_image_dir, local_md_dir
-    from magic_pdf.cli import magicpdf 
-    magicpdf.prepare_env = prepare_env
+    if output_dir == "":
+        if os.path.isdir(doc_path):
+            output_dir = os.path.join(doc_path, "output")
+        else:
+            output_dir = os.path.join(os.path.dirname(output), "output")
     
-    from magic_pdf.cli.magicpdf import do_parse
+    from magic_pdf.tools.common import do_parse
+    from magic_pdf.libs.MakeContentConfig import MakeMode
     model = SingletonModelWrapper() 
 
     if doc_path.startswith("s3://"):
@@ -141,7 +144,7 @@ def pdf_cli(method, doc_path, output, debug):
     else:
         '''非s3路径不需要初始化s3配置'''
         s3_config = None
-    doc_conv = DocConverter(s3_config)
+    doc_conv = DocConverter(s3_config, models_dir=models_dir)
     bits = doc_conv.get_raw_file_content(doc_path)
 
     file_name = str(Path(doc_path).stem)
@@ -149,14 +152,23 @@ def pdf_cli(method, doc_path, output, debug):
 
     if method == "digital":
         method = "txt"
-    do_parse(file_name, bits, model_list, method, f_draw_span_bbox=debug,
-            f_draw_layout_bbox=debug,
-            f_dump_md=True,
-            f_dump_middle_json=debug,
-            f_dump_model_json=debug,
-            f_dump_orig_pdf=debug,
-            f_dump_content_list=debug)
+    do_parse(
+        output_dir,
+        file_name, 
+        bits, 
+        model_list, 
+        method, 
+        f_draw_span_bbox=True,
+        f_draw_layout_bbox=True,
+        f_dump_md=True,
+        f_dump_middle_json=True,
+        f_dump_model_json=True,
+        f_dump_orig_pdf=True,
+        f_dump_content_list=False,
+        f_make_md_mode=MakeMode.MM_MD,
+        f_draw_model_bbox=False,
+    )
 
 
 if __name__ == '__main__':
-    cli_conv()
+    cli()

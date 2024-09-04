@@ -75,7 +75,7 @@ class TestDocConversion:
         """
         # for local file
         file_path = os.path.join(code_path, "datas/test06.pptx")
-        converter = DocConverter(s3_config=None)
+        converter = DocConverter(s3_config=None, models_dir='/Users/dbliu/work/machine-learn/PDF-Extract-Kit/models')
         markdown_content, time_cost = converter.convert(file_path, conv_timeout=300)
         assert len(markdown_content) > 0
         assert time_cost > 0
@@ -86,7 +86,7 @@ class TestDocConversion:
         """
         # for local file
         file_path = os.path.join(code_path, "datas/test04.pdf")
-        converter = DocConverter(s3_config=None)
+        converter = DocConverter(s3_config=None, models_dir='/Users/dbliu/work/machine-learn/PDF-Extract-Kit/models')
         markdown_content, time_cost = converter.convert(file_path, conv_timeout=300)
         assert len(markdown_content) > 0
         assert time_cost > 0
@@ -97,7 +97,7 @@ class TestDocConversion:
         """
         # for local file
         file_path = os.path.join(code_path, "datas/test01.doc")
-        converter = DocConverter(s3_config=None)
+        converter = DocConverter(s3_config=None, models_dir='/Users/dbliu/work/machine-learn/PDF-Extract-Kit/models')
         markdown_content, time_cost = converter.convert(file_path, conv_timeout=300)
         assert len(markdown_content) > 0
         assert time_cost > 0
@@ -108,7 +108,7 @@ class TestDocConversion:
         """
         # for local file
         file_path = os.path.join(code_path, "datas/test02.docx")
-        converter = DocConverter(s3_config=None)
+        converter = DocConverter(s3_config=None, models_dir='/Users/dbliu/work/machine-learn/PDF-Extract-Kit/models')
         markdown_content, time_cost = converter.convert(file_path, conv_timeout=300)
         assert len(markdown_content) > 0
         assert time_cost > 0

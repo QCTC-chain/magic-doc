@@ -23,5 +23,6 @@ source.dev.env
 # pycharm
 .idea/
 
+dist/
 build/
-fairy_doc.egg-info/
+qctc_doc.egg-info/

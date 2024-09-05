@@ -42,9 +42,9 @@ Install Magic-Doc
 
 
 ```bash
-pip install fairy-doc[cpu] # cpu version
+pip install qctc-doc[cpu] --extra-index-url https://wheels.myhloli.com # cpu version
 or
-pip install fairy-doc[gpu] # gpu version
+pip install qctc-doc[gpu] --extra-index-url https://wheels.myhloli.com # gpu version
 ```
 
 

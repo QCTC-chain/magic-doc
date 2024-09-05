@@ -24,7 +24,7 @@ if __name__ == "__main__":
               'README.md').open(encoding='utf-8') as file:
         long_description = file.read()
     setup(
-        name="fairy_doc",  # 项目名
+        name="qctc_doc",  # 项目名
         version=__version__,  # 自动从tag中获取版本号
         packages=find_packages() + ["magic_doc.bin", "magic_doc.resources"],  # 包含所有的包
         package_data={
@@ -35,21 +35,22 @@ if __name__ == "__main__":
         license='Apache 2.0',
         extras_require={
             "gpu": [
-                "paddlepaddle==3.0.0b1;platform_system=='Linux'",  # 解决linux的段异常问题
-                "paddlepaddle==2.6.1;platform_system=='Windows' or platform_system=='Darwin'",  # windows版本3.0.0b1效率下降，需锁定2.6.1  
+                "paddlepaddle-gpu==2.6.1",
                 "paddleocr==2.7.3", 
+                "magic-pdf[full]==0.7.1",
             ],
             "cpu": [
                 "paddlepaddle==3.0.0b1;platform_system=='Linux'",  # 解决linux的段异常问题
                 "paddlepaddle==2.6.1;platform_system=='Windows' or platform_system=='Darwin'",  # windows版本3.0.0b1效率下降，需锁定2.6.1  
                 "paddleocr==2.7.3", 
+                "magic-pdf[full]==0.7.1",
             ],
         },
         description='A lightweight toolbox to manipulate documents',
         long_description=long_description,
         long_description_content_type='text/markdown',
         install_requires=parse_requirements("requirements.txt"),  # 项目依赖的第三方库
-        url="https://github.com/InternLM/magic-doc",
+        url="https://github.com/QCTC-chain/magic-doc",
         python_requires=">=3.10, <3.11",  # 项目依赖的 Python 版本
         entry_points={
             "console_scripts": [

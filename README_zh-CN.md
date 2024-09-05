@@ -40,9 +40,9 @@ apt-get/yum/brew install libreoffice
 
 
 ```bash
-pip install fairy-doc[cpu] # 安装 cpu 版本 
-或 
-pip install fairy-doc[gpu] # 安装 gpu 版本
+pip install qctc-doc[cpu] --extra-index-url https://wheels.myhloli.com # cpu version
+or
+pip install qctc-doc[gpu] --extra-index-url https://wheels.myhloli.com # gpu version
 ```
 
 

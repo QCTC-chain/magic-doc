@@ -1,3 +1,11 @@
+'''
+Author: dbliu shaxunyeman@gmail.com
+Date: 2024-09-02 17:55:19
+LastEditors: dbliu shaxunyeman@gmail.com
+LastEditTime: 2024-09-05 09:03:09
+FilePath: /magic-doc/magic_doc/conv/pptx_python_pptx.py
+Description: 
+'''
 import tempfile
 from pathlib import Path
 
@@ -14,7 +22,7 @@ class Pptx(BaseConv):
     def __init__(self):
         super().__init__()
 
-    def to_md(self, bits: bytes, pupdator: ConvProgressUpdator) -> str:
+    def to_md(self, bits: bytes, pupdator: ConvProgressUpdator, **kwargs) -> str:
         page_list = self.pptx_to_pagelist(bits, pupdator)
         md_content_list = []
         total = len(page_list)

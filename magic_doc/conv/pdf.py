@@ -1,3 +1,11 @@
+'''
+Author: dbliu shaxunyeman@gmail.com
+Date: 2024-09-02 17:55:19
+LastEditors: dbliu shaxunyeman@gmail.com
+LastEditTime: 2024-09-05 09:02:52
+FilePath: /magic-doc/magic_doc/conv/pdf.py
+Description: 
+'''
 from io import BytesIO
 
 from loguru import logger
@@ -14,7 +22,7 @@ class Pdf(BaseConv):
     def __init__(self, allowed_failure=True):
         self.allowed_failure = allowed_failure
 
-    def to_md(self, bits: bytes | str, pupdator: ConvProgressUpdator) -> str:
+    def to_md(self, bits: bytes | str, pupdator: ConvProgressUpdator, **kwargs) -> str:
         pdf_extractor = PDFExtractor()
         buf = BytesIO(bits)  # type: ignore
         content = pdf_extractor.run("stream io data", FileStorage(buf, "fake.pdf"))

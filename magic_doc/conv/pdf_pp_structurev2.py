@@ -1,3 +1,11 @@
+'''
+Author: dbliu shaxunyeman@gmail.com
+Date: 2024-09-02 17:55:19
+LastEditors: dbliu shaxunyeman@gmail.com
+LastEditTime: 2024-09-05 09:02:47
+FilePath: /magic-doc/magic_doc/conv/pdf_pp_structurev2.py
+Description: 
+'''
 from pathlib import Path
 import os
 
@@ -34,7 +42,7 @@ class SingletonModelWrapper:
 
 
 class Pdf(BaseConv):
-    def to_md(self, bits: bytes | str, pupdator: ConvProgressUpdator) -> str:
+    def to_md(self, bits: bytes | str, pupdator: ConvProgressUpdator, **kwargs) -> str:
         model = SingletonModelWrapper()
         model_list = model(bits)
         pupdator.update(50)

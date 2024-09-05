@@ -161,6 +161,7 @@ class DocConverter(object):
         progress_file_path: str,
         conv_method,
         conv_timeout=None,
+        kwargs = None,
     ):
         """
         在线快速解析
@@ -175,7 +176,7 @@ class DocConverter(object):
             prog_updator = FileBaseProgressUpdator(progress_file_path)
             start_time = time.time()
             res = func_timeout(
-                conv_timeout, conv_method, args=(byte_content, prog_updator)
+                conv_timeout, conv_method, args=(byte_content, prog_updator), kwargs=kwargs
             )
             end_time = time.time()
             cost_time = round(end_time - start_time, 3)
@@ -193,7 +194,7 @@ class DocConverter(object):
 
         return res, cost_time
 
-    def convert(self, doc_path: str, progress_file_path: str = "/tmp/magic_doc_convert_progress.txt", conv_timeout=None):
+    def convert(self, doc_path: str, progress_file_path: str = "/tmp/magic_doc_convert_progress.txt", conv_timeout=None, kwargs = None):
         """
         在线快速解析
         doc_path: str, path to the document, support local file path and s3 path.
@@ -203,7 +204,7 @@ class DocConverter(object):
         byte_content = self.__read_file_as_bytes(doc_path)
         conv: BaseConv = self.__select_conv(doc_path, byte_content)
         return self._timeout_convert(
-            byte_content, progress_file_path, conv.to_md, conv_timeout
+            byte_content, progress_file_path, conv.to_md, conv_timeout, kwargs
         )
 
     def convert_to_mid_result(

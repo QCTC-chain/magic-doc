@@ -1,3 +1,11 @@
+'''
+Author: dbliu shaxunyeman@gmail.com
+Date: 2024-09-02 17:55:19
+LastEditors: dbliu shaxunyeman@gmail.com
+LastEditTime: 2024-09-05 09:02:32
+FilePath: /magic-doc/magic_doc/conv/docx_xml_parse.py
+Description: 
+'''
 import io
 import tempfile
 import zipfile
@@ -17,7 +25,7 @@ class Docx(BaseConv):
     def __init__(self):
         super().__init__()
 
-    def to_md(self, bits: bytes, pupdator: ConvProgressUpdator) -> str:
+    def to_md(self, bits: bytes, pupdator: ConvProgressUpdator, **kwargs) -> str:
         page_list = self.docx_to_pagelist(bits, pupdator)
         md_content_list = []
         for page in page_list:

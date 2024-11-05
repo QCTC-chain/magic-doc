@@ -6,4 +6,4 @@ LastEditTime: 2024-09-06 17:20:16
 FilePath: /magic-doc/magic_doc/libs/version.py
 Description: 
 '''
-__version__ = "0.1.5"
+__version__ = "0.1.6"

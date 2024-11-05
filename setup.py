@@ -36,13 +36,13 @@ if __name__ == "__main__":
         extras_require={
             "gpu": [
                 "paddlepaddle-gpu==2.6.2",
-                "paddleocr==2.9.1", 
+                "paddleocr==2.7.3", 
                 "magic-pdf[full]==0.9.0",
             ],
             "cpu": [
                 "paddlepaddle==3.0.0b1;platform_system=='Linux'",  # 解决linux的段异常问题
                 "paddlepaddle==2.6.2;platform_system=='Windows' or platform_system=='Darwin'",  # windows版本3.0.0b1效率下降，需锁定2.6.2  
-                "paddleocr==2.9.1", 
+                "paddleocr==2.7.3", 
                 "magic-pdf[full]==0.9.0",
             ],
         },

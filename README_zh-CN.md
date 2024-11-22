@@ -43,6 +43,8 @@ apt-get/yum/brew install libreoffice
 pip install qctc-doc[cpu] --extra-index-url https://wheels.myhloli.com # cpu version
 or
 pip install qctc-doc[gpu] --extra-index-url https://wheels.myhloli.com # gpu version
+or
+pip install '.[cpu]' --extra-index-url https://wheels.myhloli.com # cpu version
 ```
 
 

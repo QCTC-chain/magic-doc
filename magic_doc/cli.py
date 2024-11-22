@@ -127,15 +127,15 @@ def pdf_cli(method, doc_path, output, debug, models_dir):
 
     os.environ["APPLY_FORMULA"] = "TRUE"
 
-    if output_dir == "":
+    if output == "":
         if os.path.isdir(doc_path):
-            output_dir = os.path.join(doc_path, "output")
+            output = os.path.join(doc_path, "output")
         else:
-            output_dir = os.path.join(os.path.dirname(output), "output")
+            output = os.path.join(os.path.dirname(output), "output")
     
     from magic_pdf.tools.common import do_parse
     from magic_pdf.libs.MakeContentConfig import MakeMode
-    model = SingletonModelWrapper() 
+    model = SingletonModelWrapper(models_dir) 
 
     if doc_path.startswith("s3://"):
         bucket, key = parse_s3path(doc_path)
@@ -153,7 +153,7 @@ def pdf_cli(method, doc_path, output, debug, models_dir):
     if method == "digital":
         method = "txt"
     do_parse(
-        output_dir,
+        output,
         file_name, 
         bits, 
         model_list, 

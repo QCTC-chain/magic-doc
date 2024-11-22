@@ -121,7 +121,7 @@ class Pdf(BaseConv):
         return md_content # type: ignore
 
     def to_mid_result(self, image_writer: AbsReaderWriter, bits: bytes | str, pupdator: ConvProgressUpdator) -> list[dict] | dict:
-        model_proc = SingletonModelWrapper()
+        model_proc = SingletonModelWrapper(self.models_dir)
         pupdator.update(0)
 
         model_list = model_proc(bits)  # type: ignore
@@ -130,8 +130,8 @@ class Pdf(BaseConv):
         #     "_pdf_type": "",
         #     "model_list": model_list,
         # }
-        pipe = self.__construct_pdf_pipe(bits, model_list, image_writer)
-        # pipe.pipe_classify()
+        pipe = self.__construct_pdf_pipe(bits, model_list, image_writer, DEFAULT_CONFIG["pdf"]["hq"]["parsemethod"])
+        pipe.pipe_classify()
         pipe.pipe_parse()
         pupdator.update(100)
 

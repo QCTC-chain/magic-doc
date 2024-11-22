@@ -1,0 +1,36 @@
+﻿# 基本配置
+BaseConfig: &base
+  DEBUG: true
+  LOG_LEVEL: "DEBUG"
+  SQLALCHEMY_TRACK_MODIFICATIONS: true
+  SQLALCHEMY_DATABASE_URI: ""
+  SECRET_KEY: "#$%^&**$##*(*^%%$**((&"
+  JWT_SECRET_KEY: "#$%^&**$##*(*^%%$**((&"
+  JWT_ACCESS_TOKEN_EXPIRES: 300
+  AccessKeyID: "oPIC8zU4XdvPD73W"
+  AccessKeySecret: "IvIyJfCA1Iv0quOWjjH4oqHAbgJhLAoj"
+  Endpoint: "192.168.1.48:9000"
+  BucketName: "magic-doc"
+  UrlExpires: 60
+
+  S3AK: ""
+  S3SK: ""
+  S3ENDPOINT: ""
+
+  ModelsDir: "/Users/dbliu/work/machine-learn/PDF-Extract-Kit/models"
+
+
+# 开发配置
+DevelopmentConfig:
+  <<: *base
+
+# 生产配置
+ProductionConfig:
+  <<: *base
+
+# 测试配置
+TestingConfig:
+  <<: *base
+
+# 当前使用配置
+CurrentConfig: "DevelopmentConfig"

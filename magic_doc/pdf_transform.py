@@ -193,7 +193,7 @@ class DocConverter(object):
         )
 
     def convert_to_mid_result(
-        self, doc_path: str, progress_file_path: str, conv_timeout=None
+        self, doc_path: str, progress_file_path: str, conv_timeout=None, image_path = None,
     ):
         """
         在线快速解析
@@ -204,7 +204,10 @@ class DocConverter(object):
         byte_content = self.__read_file_as_bytes(doc_path)
         conv: BaseConv = self.__select_conv(doc_path, byte_content)
 
-        parent_path = os.path.dirname(doc_path)
+        if image_path:
+            parent_path = image_path
+        else:
+            parent_path = os.path.dirname(doc_path)
         if doc_path.startswith("s3://"):
             image_writer = S3ReaderWriter(
                 self.__s3cfg.ak,
@@ -224,3 +227,17 @@ class DocConverter(object):
             partial(conv.to_mid_result, image_writer),
             conv_timeout,
         )
+
+
+if __name__ == '__main__':
+    doc_conv = DocConverter(None, models_dir='/Users/dbliu/work/machine-learn/PDF-Extract-Kit/models')
+    result = doc_conv.convert_to_mid_result(
+        "/Users/dbliu/Desktop/深圳出差1022/报销/住宿/结账单20241104_1.pdf", 
+        "/Users/dbliu/Desktop/深圳出差1022/报销/住宿/结账单20241104_1.txt", 
+        60)
+    import json
+    from magic_pdf.dict2md.ocr_mkcontent import ocr_mk_mm_markdown_with_para_and_pagination
+    md_content = json.dumps(ocr_mk_mm_markdown_with_para_and_pagination(
+        result[0], '/Users/dbliu/Desktop/深圳出差1022/报销/住宿/'), ensure_ascii=False)
+    
+    print(md_content)

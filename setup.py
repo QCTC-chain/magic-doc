@@ -1,3 +1,11 @@
+'''
+Author: dbliu shaxunyeman@gmail.com
+Date: 2024-09-02 17:55:19
+LastEditors: shaxunyeman shaxunyeman@gmail.com
+LastEditTime: 2024-11-19 22:30:19
+FilePath: /magic-doc/setup.py
+Description: 
+'''
 from setuptools import find_packages, setup
 from pathlib import Path
 from magic_doc.libs.version import __version__

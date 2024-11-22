@@ -2,7 +2,7 @@
 Author: dbliu shaxunyeman@gmail.com
 Date: 2024-09-02 17:55:19
 LastEditors: shaxunyeman shaxunyeman@gmail.com
-LastEditTime: 2024-11-19 22:30:19
+LastEditTime: 2024-11-22 21:37:20
 FilePath: /magic-doc/setup.py
 Description: 
 '''
@@ -63,7 +63,8 @@ if __name__ == "__main__":
         entry_points={
             "console_scripts": [
                 "magic-doc=magic_doc.cli:cli_conv",
-                "pdf2md=magic_doc.cli:pdf_cli"
+                "pdf2md=magic_doc.cli:pdf_cli",
+                "magic-doc-service=magic_doc.restful_api.app:main"
             ],
         },
         include_package_data=True,

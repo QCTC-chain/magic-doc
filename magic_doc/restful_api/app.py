@@ -2,7 +2,7 @@
 Author: dbliu shaxunyeman@gmail.com
 Date: 2024-11-19 15:38:18
 LastEditors: shaxunyeman shaxunyeman@gmail.com
-LastEditTime: 2024-11-19 21:45:16
+LastEditTime: 2024-11-22 22:02:18
 FilePath: /magic-doc/magic_doc/restful_api/app.py
 Description: 
 '''
@@ -42,5 +42,8 @@ if database:
     config['SQLALCHEMY_DATABASE_URI'] = database_uri
 app = create_app(config)
 
-if __name__ == '__main__':
+def main():
     app.run(host="0.0.0.0", port=5556, debug=True)
+
+if __name__ == '__main__':
+    main()

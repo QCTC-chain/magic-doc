@@ -1,5 +1,4 @@
 import io
-import oss2
 from minio import Minio
 from magic_doc.restful_api.common.ext import singleton_func
 from loguru import logger

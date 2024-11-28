@@ -2,7 +2,7 @@
 Author: dbliu shaxunyeman@gmail.com
 Date: 2024-11-19 15:38:18
 LastEditors: shaxunyeman shaxunyeman@gmail.com
-LastEditTime: 2024-11-22 17:45:54
+LastEditTime: 2024-11-28 10:26:50
 FilePath: /magic-doc/magic_doc/restful_api/api/analysis/magic_pdf_view.py
 Description: 
 '''
@@ -16,7 +16,6 @@ from flask_restful import Resource
 from marshmallow import ValidationError
 from pathlib import Path
 from magic_doc.pdf_transform import DocConverter, S3Config
-from .serialization import MagicPdfSchema
 from magic_pdf.dict2md.ocr_mkcontent import ocr_mk_mm_markdown_with_para_and_pagination
 from magic_doc.restful_api.common.oss.oss import Oss
 from .ext import upload_image_to_oss, upload_md_to_oss

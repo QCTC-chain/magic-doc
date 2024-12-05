@@ -25,6 +25,7 @@ from loguru import logger
 
 executor = ThreadPoolExecutor()
 
+CONVERT_TIME_OUT = 1800
 
 class MagicPdfView(Resource):
 
@@ -65,7 +66,7 @@ class MagicPdfView(Resource):
             oss_client: Oss):
         app_config = current_app.config
         t1 = time.time()
-        result = doc_conv.convert_to_mid_result(pdf_path, pf_path, 60, image_path=image_path)
+        result = doc_conv.convert_to_mid_result(pdf_path, pf_path, CONVERT_TIME_OUT, image_path=image_path)
         t2 = time.time()
         logger.info(f"pdf doc_conv cost_time:{t2 - t1}")
         md_content = json.dumps(ocr_mk_mm_markdown_with_para_and_pagination(result[0], image_path), ensure_ascii=False)
@@ -106,7 +107,7 @@ class MagicPdfView(Resource):
             doc_conv: DocConverter, 
             oss_client: Oss):
         app_config = current_app.config
-        md_content, cost_time = doc_conv.convert(pdf_path, pf_path, 60)
+        md_content, cost_time = doc_conv.convert(pdf_path, pf_path, CONVERT_TIME_OUT)
         logger.info(f"make markdown cost_time:{cost_time}")
 
         _t0 = time.time()

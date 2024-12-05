@@ -26,3 +26,4 @@ source.dev.env
 dist/
 build/
 qctc_doc.egg-info/
+magic_doc/restful_api/static/

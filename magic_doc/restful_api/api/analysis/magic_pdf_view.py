@@ -66,7 +66,7 @@ class MagicPdfView(Resource):
             oss_client: Oss):
         app_config = current_app.config
         t1 = time.time()
-        result = doc_conv.convert_to_mid_result(pdf_path, pf_path, CONVERT_TIME_OUT, image_path=image_path)
+        result = doc_conv.convert_to_mid_result(pdf_path, pf_path, image_path=image_path)
         t2 = time.time()
         logger.info(f"pdf doc_conv cost_time:{t2 - t1}")
         md_content = json.dumps(ocr_mk_mm_markdown_with_para_and_pagination(result[0], image_path), ensure_ascii=False)
@@ -107,7 +107,7 @@ class MagicPdfView(Resource):
             doc_conv: DocConverter, 
             oss_client: Oss):
         app_config = current_app.config
-        md_content, cost_time = doc_conv.convert(pdf_path, pf_path, CONVERT_TIME_OUT)
+        md_content, cost_time = doc_conv.convert(pdf_path, pf_path)
         logger.info(f"make markdown cost_time:{cost_time}")
 
         _t0 = time.time()
@@ -142,6 +142,7 @@ class MagicPdfView(Resource):
         t0 = time.time()
         try:
             file_name, pdf_type, pdf_path = self._save_uploaded_file()
+            timeout = request.form.get('timeout', CONVERT_TIME_OUT, type=int)
         except Exception as e:
             return generate_response(code=400, msg=e)
 
@@ -159,12 +160,12 @@ class MagicPdfView(Resource):
             pdf_path = f"{pdf_dir}/{file_name}.pdf"
             with open(pdf_path, "wb") as wf:
                 wf.write(download_pdf.content)
-            doc_conv = DocConverter(None, models_dir=models_dir)
+            doc_conv = DocConverter(None, models_dir=models_dir, conv_timeout=timeout)
         elif pdf_path.startswith("s3://"):
             s3_config = S3Config(app_config["S3AK"], app_config["S3SK"], app_config["S3ENDPOINT"])
-            doc_conv = DocConverter(s3_config, models_dir=models_dir)
+            doc_conv = DocConverter(s3_config, models_dir=models_dir, conv_timeout=timeout)
         else:
-            doc_conv = DocConverter(None, models_dir=models_dir)
+            doc_conv = DocConverter(None, models_dir=models_dir, conv_timeout=timeout)
         t1 = time.time()
         logger.info(f"param init cost_time:{t1 - t0}")
 

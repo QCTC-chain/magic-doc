@@ -18,4 +18,4 @@ RUN apt-get update \
 COPY . /magic-doc
 RUN pip install '.[cpu]' --extra-index-url https://wheels.myhloli.com
 
-ENTRYPOINT ["/bin/bash", "-c", "cd magic_doc/restful_api && python3 app.py >>out.log 2>&1"]
+ENTRYPOINT ["/bin/bash", "-c", "python3 magic_doc/restful_api/app.py"]

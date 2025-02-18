@@ -30,28 +30,40 @@ CONVERT_TIME_OUT = 1800
 class MagicPdfView(Resource):
 
     def _save_uploaded_file(self):
-        # 检查请求中是否包含文件数据
-        if 'doc_file' not in request.files:
-            raise Exception("No file part in the request")
-
-        file = request.files['doc_file']
-        if file.filename == '':
-            raise Exception("No selected file")
 
         doc_name = request.form.get('doc_name')
-        if not doc_name:
-            doc_name = file.filename
-
         doc_type = request.form.get('doc_type')
-        if not doc_type:
-            doc_type = str(Path(doc_name).suffix).strip('.')
-
         file_name = str(Path(doc_name).stem)
         upload_dir = f"{current_app.static_folder}/{doc_type}/{file_name}"
         file_path = os.path.join(upload_dir, doc_name)
         if not Path(upload_dir).exists():
             Path(upload_dir).mkdir(parents=True, exist_ok=True)
-        file.save(file_path)
+
+        doc_file = request.form.get('doc_file')
+        if doc_file:
+            if not doc_file.startswith('oss://'):
+                raise ValueError('doc_file 必须是 oss://')
+            
+            bucket_name = request.form.get('bucket_name')
+            if not bucket_name:
+                raise ValueError('没有指定 bucket')
+            
+            app_config = current_app.config
+            oss_client = Oss(
+                app_config["AccessKeyID"],
+                app_config["AccessKeySecret"],
+                bucket_name,
+                app_config["Endpoint"],
+                app_config["UrlExpires"]
+            )
+
+            oss_client.download_file(bucket_name=bucket_name, object_name=doc_file[6:], save_path=file_path)
+        else:
+            # 检查请求中是否包含文件数据
+            if 'doc_file' not in request.files:
+                raise Exception("No file part in the request")
+            file = request.files['doc_file']
+            file.save(file_path)
 
         return file_name, doc_type, file_path
     

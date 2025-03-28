@@ -1,21 +1,21 @@
 # base image
-FROM python:3.10-slim-bookworm AS base
-
-# production stage
-FROM base AS production
-
-EXPOSE 5556
+FROM python:3.10-slim-bookworm
 
 # set timezone
 ENV TZ=UTC
 
-WORKDIR /magic-doc
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get update \
+    && apt-get install -y --no-install-recommends libreoffice
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc g++ libc-dev libffi-dev libgmp-dev libmpfr-dev libmpc-dev libreoffice
+WORKDIR /magic-doc
 
 # Copy source code
 COPY . /magic-doc
-RUN pip install '.[cpu]' --extra-index-url https://wheels.myhloli.com
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install '.[gpu]' --extra-index-url https://wheels.myhloli.com
+
+EXPOSE 5556
 
 ENTRYPOINT ["/bin/bash", "-c", "python3 magic_doc/restful_api/app.py"]

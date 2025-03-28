@@ -28,7 +28,7 @@ docker run \
 5.  `magic_doc/restful_api/config/config.yaml`  配置如下所示：
 
    ```yaml
-    基本配置
+   #基本配置
    BaseConfig: &base
      DEBUG: true
      LOG_LEVEL: "DEBUG"
@@ -46,6 +46,8 @@ docker run \
      S3AK: ""
      S3SK: ""
      S3ENDPOINT: ""
+
+     ModelsDir: "/PDF-Extract-Kit/models"
    
    
    # 开发配置

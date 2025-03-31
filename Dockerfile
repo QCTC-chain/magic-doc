@@ -6,7 +6,7 @@ ENV TZ=UTC
 
 RUN --mount=type=cache,target=/var/cache/apt \
     apt-get update \
-    && apt-get install -y --no-install-recommends gcc g++ libc-dev libffi-dev libgmp-dev libmpfr-dev libmpc-dev libreoffice
+    && apt-get install -y --no-install-recommends gcc g++ libc-dev libffi-dev libgmp-dev libmpfr-dev libmpc-dev libreoffice libgl1
 
 WORKDIR /magic-doc
 
